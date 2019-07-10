@@ -1,0 +1,63 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: mz-service-user
+  datasource:
+    druid:
+      username: root
+      password: 123
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/jpa-test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+      initialSize: 5  #初始建立连接数量
+      minIdle: 5  #最小连接数量
+      maxActive: 20 #最大连接数量
+      maxWait: 10000  #获取连接最大等待时间，毫秒
+      testOnBorrow: true #申请连接时检测连接是否有效
+      testOnReturn: false #归还连接时检测连接是否有效
+      timeBetweenEvictionRunsMillis: 60000 #配置间隔检测连接是否有效的时间（单位是毫秒）
+      minEvictableIdleTimeMillis: 300000  #连接在连接池的最小生存时间（毫秒）
+#    username: root
+#    password: 123
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/jpa-test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.meizhi.entity ,com.meizhi
+
+#如果不使用hystrix,则会在每个实例重试后发现都超时的时候抛出异常
+ribbon:
+  ConnectTimeout: 1000  # 连接超时时间(ms)
+  ReadTimeout: 2000   # 通信超时时间(ms) (重要)
+  OkToRetryOnAllOperations: false # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数 (设置为0则代表当前服务不可用不会去找下一个服务,1则代表即使有三个实例,也只会访问两个)
+  MaxAutoRetries: 0 # 同一实例的重试次数,重试一次,实则会请求两次(包括最请求一次和重试的一次,0则代表每个实例只会请求一次)
+
+
+feign:
+  hystrix:
+    enabled: true # 开启Feign的熔断功能
+
+hystrix:
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000 #断路器超时时间，默认1000ms  这个最好大于ribbon重试所有实例所花的时间,不然可能还在重试,就突然断路了
+
+
+
+
+eureka:
+  client:
+    service-url: # EurekaServer地址
+      defaultZone: http://127.0.0.1:10086/eureka
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找

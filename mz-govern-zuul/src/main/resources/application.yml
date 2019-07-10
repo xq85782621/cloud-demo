@@ -1,0 +1,54 @@
+server:
+  port: 10010
+
+spring:
+  application:
+    name: zuul
+
+
+#zuul:
+#  routes:
+#    user-service: # 这里是路由id，随意写
+#      path: /user-service/** # 这里是映射路径 ,以user-service/开头的会被转发给mz-service-user这个服务
+#      serviceId: mz-service-user
+
+# 上面的一段配置可以简化为下面的
+zuul:
+  routes:
+    # 这里是映射路径  key是服务id ,value是映射路径 ###!!甚至这段配置也可以省略  服务id等于映射路径前缀,普遍存在,zuul会自动配置
+    # 即使自己手动配置了 自动配置的也仍然生效 比如说/mz-service-user/一样可以访问
+    # mz-service-goods: /mz-service-goods/** 即使不配,也会生效 ,但是尽量不要使用默认配置,因为有些服务可能不想对外暴露
+    mz-service-user: /user-service/**
+    mz-service-goods: /goods-service/**
+
+#通过ignored-services: 可以避免因为自动配置对外暴露服务 ,注意集合的属性配置方式
+#  ignored-services:
+#    - mz-service-goods
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5 # 获取服务列表的周期：5s
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+
+#网关配ribbon, 比如说通过网关访问user服务,user服务有两个实例,这个时候如果不使用负载,就只会走一个
+ribbon:
+  ConnectTimeout: 250 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 2 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 1 # 同一实例的重试次数
+
+
+#如果触发了熔断,就会报504错误(网关超时)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 6000 # 熔断超时时长：6000ms
+

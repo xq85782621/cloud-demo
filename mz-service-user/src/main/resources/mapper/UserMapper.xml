@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.meizhi.mapper.UserMapper">
+
+    <!--<select id="listUser" resultType="user" >-->
+
+        <!--SELECT *-->
+        <!--FROM `user`-->
+        <!--<where>-->
+            <!--<if test="name != null">-->
+                <!--name = #{name}-->
+            <!--</if>-->
+        <!--</where>-->
+
+    <!--</select>-->
+
+    <select id="getDetaiById" parameterType="int" resultType="userDto">
+        SELECT u.name, u.sex ,u.birthday , a.address ,a.zipcode
+        FROM `user` u LEFT JOIN address  a
+                     ON u.address_id = a.id
+        WHERE u.id = #{value}
+    </select>
+
+</mapper>
