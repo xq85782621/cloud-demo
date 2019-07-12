@@ -4,6 +4,8 @@ spring:
   application:
     name: govern-erueka # 应用名称，会在Eureka中显示
 eureka:
+  #server:
+  # enable-self-preservation: false   #无效的服务会剔除
   client:
     register-with-eureka: false # 是否注册自己的信息到EurekaServer，默认是true
     fetch-registry: false # 是否拉取其它服务的信息，默认是true

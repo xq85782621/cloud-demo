@@ -1,0 +1,34 @@
+server:
+  port: 10001
+
+spring:
+  application:
+    name: mz-govern-config
+
+  # 会从git上拉去配置文件,所以要配置仓库地址和用户名密码 ,要先在git上建立一个仓库用来存放配置
+  cloud:
+    config:
+      server:
+        git:
+          # 配置这个作用是 假如 mz-service-goods 这个服务进来找配置文件的时候,会去cloud-config这个仓库/mz-service-goods这个文件夹里面找
+          # 然后默认读取名称为mz-service-goods- ?  (?是不同环境自己指定) 的配置文件
+          search-paths: '{application}'
+          uri: https://github.com/xq85782621/cloud-config
+          username: 85782621@qq.com
+          password: xq85782621.
+
+
+#配置中心也需要注册到eureka中去
+eureka:
+  client:
+    service-url: # EurekaServer地址
+      defaultZone: http://localhost:10086/eureka
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #也可以改为"*"来暴露所有接口

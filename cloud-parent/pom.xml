@@ -29,16 +29,19 @@
         <module>../mz-framework-model</module>
         <module>../mz-service-api</module>
         <module>../mz-govern-zuul</module>
+        <module>../mz-govern-config</module>
     </modules>
     <packaging>pom</packaging>
 
 
     <dependencyManagement>
         <dependencies>
+            <!--该版本cloud的各个组件的依赖管理,官方已经帮我们做好了,这就是为什么我们自己的父pom里,没有指定zuul,ribbon等等的版本-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>Finchley.SR1</version>
+                <!--一般maven坐标代表了jar,这里指定这个坐标实际上是个pom.xml-->
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -75,6 +78,7 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+
         </dependencies>
 
 
