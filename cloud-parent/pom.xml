@@ -18,7 +18,7 @@
         <lombok.version>1.16.16</lombok.version>
         <commons-lang3.version>3.6</commons-lang3.version>
         <springfox-swagger.version>2.7.0</springfox-swagger.version>
-        <guava.version>24.0-jre</guava.version>
+        <guava.version>24.1.1-jre</guava.version>
     </properties>
 
     <modules>
